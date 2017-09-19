@@ -19,8 +19,8 @@ public class ShiroController {
 
     @RequestMapping(value="/index",method= RequestMethod.GET)
     public String index(Model model){
-        String userName = (String) SecurityUtils.getSubject().getPrincipal();
-        model.addAttribute("username", userName);
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        model.addAttribute("username", user.getUsername());
         return "index";
     }
 
