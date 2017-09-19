@@ -48,4 +48,18 @@ public class ShiroController {
             return "login";
         }
     }
+
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        request.getSession().invalidate();
+        return "login";
+    }
+
+//    @RequiresRoles({"admin"}) //和配置 filterChainDefinitionMap.put("/admin/**", "roles[admin]")一样的效果
+    @RequestMapping("/admin")
+    public String admin(HttpServletRequest request) {
+        return "index";
+    }
 }
