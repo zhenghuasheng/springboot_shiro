@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>video</title>
+</head>
+
+<body>
+<script src="theme/lib/js/jquery.min.js"></script>
+<script type="text/javascript">
+    //获取href所带指定参数的值
+    function getUrlParams(val) {
+        var uri = window.location.search;
+        var re = new RegExp("" + val + "\=([^\&\?]*)", "ig");
+        return ((uri.match(re)) ? (uri.match(re)[0].substr(val.length + 1)) : null);
+    }
+</script>
+ <script>
+     $(function () {
+         var name = getUrlParams("address");
+         if (name) {
+             var r = "<source src='" + name + "'>";
+             $("#video_play").append(r);
+         }else {
+             $("#video_play").append("<source src= 'http://yy.com:8480/data//dasheng/20170925/7236d100-fe73-439e-bad1-5e29977f3433.mp4'>");
+         }
+
+         var device_type = navigator.userAgent;//获取userAgent信息
+         $('#client').append(device_type);
+
+     });
+ </script>
+<!--     <video src="http://www.zhangxinxu.com/study/media/cat.mp4" width="352" height="264" autoplay = "autoplay" controls="controls"/>-->
+<div style="text-align: center">
+    <video width="100%" height="100%" autoplay = "autoplay" controls="controls" id="video_play"/>
+    <span id="client">
+
+    </span>
+</div>
+</body>
+</html>

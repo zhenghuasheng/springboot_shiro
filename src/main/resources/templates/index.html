@@ -3,13 +3,17 @@
       xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <body>
 
+<script>
+    window.location.href = "video.html"
+</script>
+
 <shiro:user>
     欢迎<shiro:principal property="username"/>
 </shiro:user>
 <div shiro:hasRole="admin">
     我是admin
 </div>
-<a href="/logout">退出</a>
+    <a href="/logout">退出</a>
     <a href="/admin">user-admin</a>
 
 </body>

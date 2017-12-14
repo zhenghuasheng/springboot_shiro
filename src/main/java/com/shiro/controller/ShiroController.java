@@ -4,6 +4,10 @@ import com.shiro.model.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.SavedRequest;
+import org.apache.shiro.web.util.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 public class ShiroController {
+
+    private static Logger logger = LoggerFactory.getLogger(ShiroController.class);
 
     @RequestMapping(value="/index",method= RequestMethod.GET)
     public String index(Model model){
@@ -41,7 +47,13 @@ public class ShiroController {
             }
             subject.login(token);//会跳到我们自定义的realm中
             request.getSession().setAttribute("user", user);
-            return "index";
+
+            SavedRequest savedRequest = WebUtils.getSavedRequest(request);
+            if (savedRequest == null) {
+                return "index";
+            }
+            logger.info("saved url:{}", savedRequest.getRequestUrl());
+            return "redirect:" + savedRequest.getRequestUrl();
         }catch(Exception e){
             request.getSession().setAttribute("user", user);
             request.setAttribute("error", "用户名或密码错误！");
