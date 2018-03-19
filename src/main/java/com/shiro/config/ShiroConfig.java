@@ -13,6 +13,7 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,6 +60,7 @@ public class ShiroConfig {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(shiroRealm());
         securityManager.setRememberMeManager(rememberMeManager());
+        securityManager.setSessionManager(sessionManager());
         return securityManager;
     }
 
@@ -146,6 +148,26 @@ public class ShiroConfig {
         enterpriseCacheSessionDAO.setActiveSessionsCacheName("shiro-activeSessionCache");
         enterpriseCacheSessionDAO.setSessionIdGenerator(sessionIdGenerator);
         return enterpriseCacheSessionDAO;
+    }
+
+
+    @Bean
+    public SimpleCookie sessionIdCookie() {
+        SimpleCookie simpleCookie = new SimpleCookie("JSESSIONID");
+        simpleCookie.setHttpOnly(true);
+        simpleCookie.setMaxAge(-1);
+        return simpleCookie;
+    }
+
+    @Bean
+    public DefaultWebSessionManager sessionManager() {
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        sessionManager.setSessionIdCookie(sessionIdCookie());
+        sessionManager.setSessionIdCookieEnabled(true);
+        sessionManager.setGlobalSessionTimeout(100000);
+        sessionManager.setDeleteInvalidSessions(true);
+        sessionManager.setSessionDAO(sessionDAO(sessionIdGenerator()));
+        return sessionManager;
     }
 
     @Bean
